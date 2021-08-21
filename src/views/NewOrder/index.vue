@@ -128,18 +128,10 @@
   <div class="right_block">
     <yandex-map
         ref="map"
-        :coords="[55.72, 37.65]"
-        zoom="10"
+        :coords="[62.02, 129.73]"
+        zoom="13"
         :controls="[]"
     >
-      <ymap-marker
-          v-for="n in markers"
-          :key="n.id"
-          :marker-id="n.id"
-          marker-type="placemark"
-          :coords="n.coord"
-          :balloon="{ body: n.text }"
-      ></ymap-marker>
     </yandex-map>
   </div>
 </div>
@@ -196,12 +188,7 @@ export default {
         status: null,
         comment: null,
         fio: null
-      },
-      markers: [
-        { coord: [55.8, 37.4], text: 'hello, world!!' },
-        { coord: [55.6, 37.5], text: 'hi' },
-        { coord: [55.7, 37.7], text: 'hi there' },
-      ].map((n, i) => ({ ...n, id: i + 1 }))
+      }
     }
   },
   computed: {
@@ -308,14 +295,12 @@ export default {
   .right_block {
     margin-left: 10px;
     width: 100%;
-    border: 1px solid red;
     display: flex;
     justify-content: center;
     align-items: center;
     .ymap-container {
-      height: 550px;
       width: 100%;
-      position: absolute;
+      height: calc(100% - 200px);
     }
   }
 }
