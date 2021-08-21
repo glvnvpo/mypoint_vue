@@ -20,7 +20,6 @@ export default {
   width: calc(100% + (-1 * (100vw - 100%)));
   height: 100%;
   #page {
-    border: 2px solid red;
     margin-top: 30px;
     margin-left: 20px;
     margin-right: 50px;

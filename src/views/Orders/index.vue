@@ -40,9 +40,9 @@
             <div class="tags">
               <div class="tag express" v-if="order.express_order">Срочный</div>
               <div class="tag hub" v-if="order.hub"><img src="../../assets/hub_img.svg" />#{{order.hub}}</div>
-              <div class="tag goods" v-if="order.goods">{{order.goods}}</div>
+              <div class="tag goods" v-if="order.goodId">{{getGoodById(order.goodId).text}}</div>
               <div class="tag cost">{{order.cost}} ₽</div>
-              <div class="tag status">{{order.status}}</div>
+              <div class="tag status">{{getPaymentById(order.status).text}}</div>
             </div>
           </div>
           <div class="wrap">
@@ -56,9 +56,9 @@
           <div>
             <div class="courier">
               <img src="../../assets/courier.svg" />
-              <span class="name">#{{order.courier.id}} {{order.courier.name}}</span>
-              <img :src="require(`../../assets/rating_star_${order.courier.rating}.svg`)" />
-              <span class="rating">{{order.courier.rating}}</span>
+              <span class="name">#{{order.courierId }} {{getCourierById(order.courierId).text}}</span>
+              <img :src="require(`../../assets/rating_star_${getCourierById(order.courierId).rating}.svg`)" />
+              <span class="rating">{{getCourierById(order.courierId).rating}}</span>
             </div>
             <div class="point a">{{order.point_a}}</div>
             <div class="point b">{{order.point_b}}</div>
@@ -96,9 +96,6 @@ export default {
       orderIdNumber: null,
       hubNumber: null,
       courierId: null,
-      hubs: [{value: 3, text: 3}, {value: 4, text: 4}, {value: 7, text: 7}],
-      couriers: [{value: 31, text: 'Александров Б.Ю.'}, {value: 9, text: 'Птичкин В.А.'},
-        {value: 3, text: 'Собакин А.А.'},{value: 4, text: 'Макаронкина Е.К.'},{value: 8, text: 'Семенов Б.К.'}],
       alertVisibility: false,
       orderToDelete: null
     }
@@ -129,16 +126,34 @@ export default {
       this.alertVisibility = false;
       if (value) {
         this.$store.dispatch("deleteOrder", this.orderToDelete);
-        // this.orders = this.orders.filter((el) => { return el.id !== this.orderToDelete });
       }
+    },
+    getCourierById(id) {
+      return this.couriers.filter((el) => { return el.id === id })[0];
+    },
+    getGoodById(id) {
+      return this.goods.filter((el) => { return el.id === id })[0];
+    },
+    getPaymentById(id) {
+      return this.paymentMethods.filter((el) => { return el.id === id })[0];
     }
   },
   computed: {
+    couriers() {
+      return this.$store.getters.couriers;
+    },
+    hubs() {
+      return this.$store.getters.hubs;
+    },
+    goods() {
+      return this.$store.getters.goods;
+    },
+    paymentMethods() {
+      return this.$store.getters.paymentMethods;
+    },
     ordersFiltered () {
       if (this.orderIdNumber == null && this.hubNumber == null && this.courierId == null) {
         return this.$store.getters.orders;
-        // this.store.o
-        // return this.orders;
       }
       else {
         let orders = this.$store.getters.orders;
@@ -152,7 +167,7 @@ export default {
         }
         if (this.courierId !== null) {
           let id = parseInt(this.courierId);
-          orders = orders.filter((el) => { return el.courier.id === id });
+          orders = orders.filter((el) => { return el.courierId === id });
         }
         return orders;
       }

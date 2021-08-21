@@ -9,11 +9,7 @@ export default new Vuex.Store({
         orders: [
             {
                 id: 21900,
-                courier: {
-                    id: 31,
-                    name: 'Александров Б.Ю.',
-                    rating: 4
-                },
+                courierId: 31,
                 point_a: 'ул. Ленская, 16',
                 point_b: 'ул. Вавилова, 2/1',
                 entrance: 5, //подъезд
@@ -26,18 +22,15 @@ export default new Vuex.Store({
                 time: '10:39',
                 hub: 3,
                 express_order: false, //cрочный заказ
-                goods: 'Цветы',
+                goodId: 1,
                 cost: 600,
-                status: 'Оплачен',
-                comment: 'Вход со двора'
+                status: 3,
+                comment: 'Вход со двора',
+                fio: null
             },
             {
                 id: 21899,
-                courier: {
-                    id: 9,
-                    name: 'Птичкин В.А.',
-                    rating: 4
-                },
+                courierId: 9,
                 point_a: 'ул. Иванова, 17',
                 point_b: 'ул. Лесная, 1',
                 entrance: null, //подъезд
@@ -50,18 +43,15 @@ export default new Vuex.Store({
                 time: '10:01',
                 hub: null,
                 express_order: true, //cрочный заказ
-                goods: 'Продукты',
+                goodId: 2,
                 cost: 200,
-                status: 'Наличными',
-                comment: 'Вход со двора'
+                status: 1,
+                comment: 'Вход со двора',
+                fio: null
             },
             {
                 id: 21898,
-                courier: {
-                    id: 3,
-                    name: 'Собакин А.А.',
-                    rating: 5
-                },
+                courierId: 3,
                 point_a: 'ул. Пушкина, 1',
                 point_b: 'ул. Андропова, 10',
                 entrance: null, //подъезд
@@ -74,18 +64,15 @@ export default new Vuex.Store({
                 time: '09:58',
                 hub: 7,
                 express_order: false, //cрочный заказ
-                goods: 'Другое',
+                goodId: 3,
                 cost: 200,
-                status: 'Наличными',
-                comment: 'Пропускной режим. Вход через КПП 3'
+                status: 1,
+                comment: 'Пропускной режим. Вход через КПП 3',
+                fio: null
             },
             {
                 id: 21897,
-                courier: {
-                    id: 4,
-                    name: 'Макаронкина Е.К.',
-                    rating: 5
-                },
+                courierId: 4,
                 point_a: 'ул. Полянка, 5',
                 point_b: 'ул. Тургенева, 7',
                 entrance: 3, //подъезд
@@ -98,18 +85,15 @@ export default new Vuex.Store({
                 time: '09:51',
                 hub: 7,
                 express_order: false, //cрочный заказ
-                goods: 'Одежда',
+                goodId: 4,
                 cost: 200,
-                status: 'Наличными',
-                comment: 'Вход со двора'
+                status: 1,
+                comment: 'Вход со двора',
+                fio: null
             },
             {
                 id: 21896,
-                courier: {
-                    id: 8,
-                    name: 'Семенов Б.К.',
-                    rating: 3
-                },
+                courierId: 8,
                 point_a: 'ул. Спасская, 2',
                 point_b: 'ул. Короленко, 28',
                 entrance: 2, //подъезд
@@ -122,12 +106,28 @@ export default new Vuex.Store({
                 time: '09:48',
                 hub: 4,
                 express_order: false, //cрочный заказ
-                goods: 'Одежда',
+                goodId: 4,
                 cost: 400,
-                status: 'Оплачен',
-                comment: 'Вход со двора'
+                status: 3,
+                comment: 'Вход со двора',
+                fio: null
             }
         ],
+        hubs: [{value: 3, text: 3}, {value: 4, text: 4}, {value: 7, text: 7}],
+        couriers: [{id: 31, value: 31, text: 'Александров Б.Ю.', rating: 4},
+            {id: 9, value: 9, text: 'Птичкин В.А.', rating: 4},
+            {id: 3, value: 3, text: 'Собакин А.А.', rating: 5},
+            {id: 4, value: 4, text: 'Макаронкина Е.К.', rating: 5},
+            {id: 8, value: 8, text: 'Семенов Б.К.', rating: 3}],
+        goods: [{id: 1, value: 1, text: 'Цветы'},
+            {id: 2, value: 2, text: 'Продукты'},
+            {id: 3, value: 3, text: 'Другое'},
+            {id: 4, value: 4, text: 'Одежда'}],
+        paymentMethods: [
+            {id: 1, value: 1, text: 'Наличными'},
+            {id: 2, value: 2, text: 'Карта'},
+            {id: 3, value: 3, text: 'Оплачен'}
+        ]
     },
     actions: {
         addOrder({commit}, order) {
@@ -139,16 +139,27 @@ export default new Vuex.Store({
     },
     mutations: {
         ADD_ORDER(state, order) {
-            state.push(order);
+            state.orders.unshift(order);
         },
         DELETE_ORDER(state, id) {
             state.orders = state.orders.filter((el) => { return el.id !== id });
-            // this.orders = this.orders.filter((el) => { return el.id !== this.orderToDelete });
         }
     },
     getters: {
         orders(state) {
             return state.orders;
+        },
+        couriers(state) {
+            return state.couriers;
+        },
+        hubs(state) {
+            return state.hubs;
+        },
+        goods(state) {
+            return state.goods;
+        },
+        paymentMethods(state) {
+            return state.paymentMethods;
         }
     }
 

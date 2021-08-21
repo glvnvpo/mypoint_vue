@@ -1,5 +1,5 @@
 <template>
-  <div class="select" :style="`width:${width}px`">
+  <div class="select" :class="this.id" :style="`width:${width}px`">
       <span
           class="header_text" :class="required && 'required'"
       >{{ this.text }}</span
@@ -77,7 +77,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
-  border: 1px solid red;
   position: relative;
   &:after {
     content: url("../../../assets/arrow_orange.svg");
@@ -87,9 +86,7 @@ export default {
   }
   .header_text {
     max-width: calc(100% - 18px);
-    //box-sizing: border-box;
     position: relative;
-    border: 1px solid goldenrod;
     &.required {
       &:after {
         content: "";
@@ -102,11 +99,6 @@ export default {
         bottom: 4px;
       }
     }
-  }
-  select {
-    -moz-appearance:none; /* Firefox */
-    -webkit-appearance:none; /* Safari and Chrome */
-    appearance:none;
   }
 }
 </style>

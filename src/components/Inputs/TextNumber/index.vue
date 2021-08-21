@@ -1,5 +1,5 @@
 <template>
-  <div class="input_text_number" :style="`width:${width}px`">
+  <div class="input_text_number" :class="this.id" :style="`width:${width}px`">
     <div class="header_text" :class="required && 'required'">{{ this.text }}</div>
     <input
         :type="this.type"
@@ -12,6 +12,7 @@
         :min="this.type === 'number' ? this.min : false"
         :max="this.type === 'number' ? this.max : false"
         :step="this.type === 'number' && this.step === 'any' ? this.step : false"
+        :style="`height:${height}px`"
     />
   </div>
 </template>
@@ -33,8 +34,7 @@ export default {
     id: String, //id инпута
     placeholder: {
       default: "", //текст-подсказка внутри пустого инпута
-      type: String,
-      required: true
+      type: String
     },
     required: {
       default: true, //обязателен ли инпут для заполнения, "true" || "false, задавать через v-bind:required
@@ -67,6 +67,10 @@ export default {
     width: { //ширина input
       default: 250,
       type: Number
+    },
+    height: { //выысота input
+      default: null,
+      type: Number
     }
   },
   data() {
@@ -95,12 +99,9 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 20px;
-  border: 1px solid red;
   .header_text {
     max-width: calc(100% - 18px);
-    //box-sizing: border-box;
     position: relative;
-    border: 1px solid goldenrod;
     &.required {
       &:after {
         content: "";
@@ -115,22 +116,9 @@ export default {
     }
   }
   input {
-
     margin-top: 5px;
-
     width: 100%;
-    //font-family: Roboto;
-    //font-size: 17px;
-    //color: $white;
-    //box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
   }
 }
-input {
-  -moz-appearance: textfield;
-}
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+
 </style>
