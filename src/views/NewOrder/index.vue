@@ -122,20 +122,37 @@
           :height="121"
           :required="false"
       />
-      <div class="total"><span>Тариф: {{totalCost}} Р</span><button type="submit">Добавить</button></div>
+      <div class="total"><span>Тариф: {{newOrder.cost ? newOrder.cost+50 : 0}} Р</span><button type="submit">Добавить</button></div>
     </form>
   </div>
-  <div class="right_block"></div>
+  <div class="right_block">
+    <yandex-map
+        ref="map"
+        :coords="[55.72, 37.65]"
+        zoom="10"
+        :controls="[]"
+    >
+      <ymap-marker
+          v-for="n in markers"
+          :key="n.id"
+          :marker-id="n.id"
+          marker-type="placemark"
+          :coords="n.coord"
+          :balloon="{ body: n.text }"
+      ></ymap-marker>
+    </yandex-map>
+  </div>
 </div>
 </template>
 
 <script>
 import InputTextNumber from "@/components/Inputs/TextNumber";
 import Select from "@/components/Inputs/Select";
+import { yandexMap, ymapMarker } from 'vue-yandex-maps'
 import {ORDERS} from "@/Permission";
 export default {
   name: "NewOrder",
-  components: {Select, InputTextNumber},
+  components: {Select, InputTextNumber, yandexMap, ymapMarker},
   data() {
     return {
       newOrder: {
@@ -180,7 +197,11 @@ export default {
         comment: null,
         fio: null
       },
-      totalCost: 0
+      markers: [
+        { coord: [55.8, 37.4], text: 'hello, world!!' },
+        { coord: [55.6, 37.5], text: 'hi' },
+        { coord: [55.7, 37.7], text: 'hi there' },
+      ].map((n, i) => ({ ...n, id: i + 1 }))
     }
   },
   computed: {
@@ -285,7 +306,17 @@ export default {
   }
   }
   .right_block {
-
+    margin-left: 10px;
+    width: 100%;
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .ymap-container {
+      height: 550px;
+      width: 100%;
+      position: absolute;
+    }
   }
 }
 </style>

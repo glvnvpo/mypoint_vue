@@ -79,7 +79,40 @@
       <div v-if="$store.getters.orders.length===0" class="empty">Заказов нет. Создайте новый!</div>
     </div>
   </div>
-  <div class="right_block"></div>
+  <div class="right_block">
+    <div class="legend">
+      <div>
+        <img src="../../assets/hub_point.svg" />
+        <span>- хабы</span>
+      </div>
+      <div>
+        <img src="../../assets/courier_point.svg" />
+        <span>- курьеры</span>
+    </div>
+    </div>
+    <yandex-map
+        ref="map"
+        :coords="[62.02, 129.73]"
+        zoom="13"
+        :controls="[]"
+    >
+      <ymap-marker
+          v-for="(item, i) in markers"
+          :key="i"
+          :marker-id="i"
+          marker-type="placemark"
+          :coords="item.coord"
+          :icon="{
+        layout: 'default#imageWithContent',
+        imageHref: item.type === 'hub' ? require('@/assets/hub_point.svg') : require('@/assets/courier_point.svg'),
+        imageSize: [25, 37],
+        imageOffset: [0, 0],
+        contentOffset: [0, 10],
+        contentLayout: getIconContentLayout(item)
+  }"
+      ></ymap-marker>
+    </yandex-map>
+  </div>
   <Alert :text="`Подтвердите удаление заказа #${orderToDelete}`" v-if="alertVisibility" @result="deleteOrder" />
 </div>
 </template>
@@ -88,16 +121,27 @@
 import InputTextNumber from "@/components/Inputs/TextNumber";
 import Select from "@/components/Inputs/Select";
 import Alert from "@/components/Alert";
+import { yandexMap, ymapMarker } from 'vue-yandex-maps';
 export default {
   name: "Orders",
-  components: {Select, InputTextNumber, Alert},
+  components: {Select, InputTextNumber, Alert, yandexMap, ymapMarker},
   data () {
     return {
       orderIdNumber: null,
       hubNumber: null,
       courierId: null,
       alertVisibility: false,
-      orderToDelete: null
+      orderToDelete: null,
+      markers: [
+        { coord: [62.018593, 129.715342], text: '3', type: 'hub' },
+        { coord: [62.035800, 129.735019], text: '4', type: 'hub' },
+        { coord: [62.023974, 129.693618], text: '7', type: 'hub' },
+        { coord: [62.039499, 129.726088], text: '31', type: 'courier' },
+        { coord: [62.011382, 129.717088], text: '9', type: 'courier' },
+        { coord: [62.028170, 129.692429], text: '3', type: 'courier' },
+        { coord: [62.018732, 129.705000], text: '4', type: 'courier' },
+        { coord: [62.013955, 129.707614], text: '8', type: 'courier' },
+      ],
     }
   },
   methods: {
@@ -136,6 +180,14 @@ export default {
     },
     getPaymentById(id) {
       return this.paymentMethods.filter((el) => { return el.id === id })[0];
+    },
+    getIconContentLayout(item) {
+      if (item.type === 'hub') {
+        return `<div style="width: 20px; margin-left: 2px; color: #F46B45; font-weight: bold;">${item.text}</div>`;
+      }
+      else {
+        return `<div style="width: 20px; margin-top: 5px; margin-left: 2px; color: #F46B45; font-weight: bold;">${item.text}</div>`;
+      }
     }
   },
   computed: {
@@ -179,7 +231,9 @@ export default {
 <style scoped lang="scss">
 .orders {
   display: flex;
+  justify-content: space-between;
   .left_block {
+    width: 590px;
     .title {
       font-size: 15px;
       font-family: SegoeUI Bold;
@@ -188,7 +242,7 @@ export default {
     .cards {
       overflow-y: auto;
       height: calc(100vh - 170px);
-      width: calc(100% + 25px);
+      width: calc(550px + 25px);
       .card {
         background: $white;
         border-radius: 3px;
@@ -362,7 +416,31 @@ export default {
     }
   }
   .right_block {
-
+    margin-left: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .legend {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 5px;
+      div {
+        display: inherit;
+        align-items: inherit;
+        margin-right: 20px;
+        img {
+          margin-right: 5px;
+        }
+      }
+    }
+    .ymap-container {
+      width: 100%;
+      height: calc(100% - 200px);
+    }
   }
 }
 </style>
